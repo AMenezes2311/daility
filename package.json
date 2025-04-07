@@ -1,12 +1,12 @@
 {
-  "homepage": "https://amenezes2311.github.io/daility",
+  "homepage": "https://AMenezes2311.github.io/daility",
   "name": "daility",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && cp -r dist build",
+    "build": "vite build && rm -rf build && cp -r dist build",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
@@ -25,7 +25,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
-    "gh-pages": "^6.3.0",
+    "gh-pages": "^6.1.1",
     "vite": "^5.1.6"
   }
 }
