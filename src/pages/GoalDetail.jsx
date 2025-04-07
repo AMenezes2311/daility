@@ -403,20 +403,8 @@ function GoalDetail() {
                     <p>{new Date(goal.target_date).toLocaleDateString()}</p>
                 </div>
                 <div className="detail-item">
-                    <h4>Priority</h4>
-                    {editMode ? (
-                        <select
-                            value={editedGoal.priority}
-                            onChange={(e) => setEditedGoal({ ...editedGoal, priority: e.target.value })}
-                            className="edit-priority-select"
-                        >
-                            <option value="low">Low</option>
-                            <option value="medium">Medium</option>
-                            <option value="high">High</option>
-                        </select>
-                    ) : (
-                        <p className={`priority-badge ${goal.priority}`}>{goal.priority}</p>
-                    )}
+                    <h4>Days Remaining</h4>
+                    <p>{Math.ceil(goal.expected_duration - (new Date() - new Date(goal.start_date)) / (1000 * 60 * 60 * 24))} days</p>
                 </div>
             </div>
 
