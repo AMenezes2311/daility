@@ -5,6 +5,12 @@ import '../styles/goals.css'
 const Home = () => {
     return (
         <div className="home-container">
+            <div className="success-circle">
+                <svg viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" />
+                    <path d="M30 50 L45 65 L70 35" />
+                </svg>
+            </div>
             <h1>Welcome to Daility</h1>
             <p className="home-description">
                 Track your goals, build habits, and achieve more with our simple and effective goal tracking app.
