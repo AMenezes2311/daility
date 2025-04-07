@@ -218,11 +218,46 @@ p {
 
 .goal-meta {
     display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
     flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 0.75rem;
+}
+
+.goal-meta span {
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
     font-size: 0.875rem;
-    color: var(--text-light);
+    color: white;
+}
+
+.goal-meta .priority-badge {
+    background-color: var(--primary-light);
+}
+
+.goal-meta .priority-badge.low {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.goal-meta .priority-badge.medium {
+    background-color: #f59e0b;
+    /* Amber/yellow color */
+    color: white;
+}
+
+.goal-meta .priority-badge.high {
+    background-color: rgba(239, 68, 68, 0.8);
+    /* Less strong red with opacity */
+    color: white;
+}
+
+.goal-meta .duration-badge {
+    background-color: var(--text-light);
+}
+
+.goal-meta span:not(.status-badge) {
+    background-color: var(--text-light);
 }
 
 /* Status badges */
@@ -253,7 +288,7 @@ p {
 .goal-card .done-button {
     position: absolute;
     top: 0.75rem;
-    padding: 0.375rem 0.75rem;
+    padding: 0.5rem 1rem;
     color: white;
     border: none;
     border-radius: var(--radius-sm);
@@ -261,7 +296,7 @@ p {
     opacity: 0;
     transition: opacity 0.2s, background-color 0.2s;
     z-index: 1;
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     font-weight: 500;
 }
 
@@ -301,88 +336,23 @@ p {
 /* Goal Detail */
 .goal-detail {
     max-width: 800px;
-    margin: 0 auto;
+    margin: 2rem auto;
     padding: 2rem;
 }
 
 .goal-header {
     margin-bottom: 2rem;
-    background-color: var(--background-white);
-    padding: 1.5rem;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
 }
 
 .goal-header-content {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
     margin-bottom: 1rem;
 }
 
-.goal-title-section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.goal-title-section h2 {
-    margin: 0;
-    color: var(--primary-color);
-}
-
-.goal-actions {
-    display: flex;
-    gap: 0.75rem;
-    align-items: center;
-}
-
-.goal-actions .progress-button {
-    background-color: var(--primary-color);
-    padding: 0.5rem 1rem;
-    color: white;
-    border: none;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    transition: background-color 0.2s;
-    font-weight: 500;
-}
-
-.goal-actions .progress-button:hover {
-    background-color: var(--primary-dark);
-}
-
-.goal-actions .done-button {
-    background-color: var(--secondary-color);
-    padding: 0.5rem 1rem;
-    color: white;
-    border: none;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    transition: background-color 0.2s;
-    font-weight: 500;
-}
-
-.goal-actions .done-button:hover {
-    background-color: var(--secondary-dark);
-}
-
-.goal-actions .delete-button {
-    background-color: var(--danger-color);
-    padding: 0.5rem 1rem;
-    color: white;
-    border: none;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    transition: background-color 0.2s;
-    font-weight: 500;
-}
-
-.goal-actions .delete-button:hover {
-    background-color: var(--danger-dark);
-}
-
 .back-button {
+    align-self: flex-start;
     background-color: var(--primary-color);
     color: white;
     border: none;
@@ -392,47 +362,214 @@ p {
     transition: background-color 0.2s;
     font-size: 0.875rem;
     font-weight: 500;
-    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .back-button:hover {
     background-color: var(--primary-dark);
 }
 
-.goal-header-content .delete-button {
-    background-color: var(--danger-color);
-    padding: 0.5rem 1rem;
+.goal-title-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.goal-title-section h2 {
+    margin: 0;
+    font-size: 1.75rem;
+}
+
+.edit-title-input {
+    font-size: 1.75rem;
+    font-weight: 600;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    width: 100%;
+}
+
+.goal-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: 1rem;
+}
+
+.edit-button {
+    background-color: var(--primary-color);
     color: white;
     border: none;
+    padding: 0.5rem 1rem;
     border-radius: var(--radius-md);
     cursor: pointer;
     transition: background-color 0.2s;
+    font-size: 0.875rem;
     font-weight: 500;
 }
 
-.goal-header-content .delete-button:hover {
+.edit-button:hover {
+    background-color: var(--primary-dark);
+}
+
+.save-button {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.save-button:hover {
+    background-color: var(--secondary-dark);
+}
+
+.done-button {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.done-button:hover {
+    background-color: var(--secondary-dark);
+}
+
+.delete-button {
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.delete-button:hover {
     background-color: var(--danger-dark);
 }
 
-.streak-info {
-    background: rgba(79, 70, 229, 0.1);
-    padding: 1.25rem;
+.progress-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
     border-radius: var(--radius-md);
-    margin-top: 1.25rem;
-    border-left: 4px solid var(--primary-color);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 0.875rem;
+    font-weight: 500;
 }
 
-.streak-info h3 {
-    color: var(--primary-color);
-    margin-top: 0;
+.progress-button:hover {
+    background-color: var(--primary-dark);
+}
+
+.goal-progress {
+    margin-bottom: 2rem;
+}
+
+.progress-bar-container {
+    height: 10px;
+    background-color: var(--border-color);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: var(--primary-color);
+    border-radius: var(--radius-full);
+    transition: width 0.3s ease;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
 }
 
 .goal-description {
-    background-color: var(--background-white);
+    margin-bottom: 2rem;
+}
+
+.edit-description-input {
+    width: 100%;
+    min-height: 100px;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    resize: vertical;
+}
+
+.goal-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    background-color: var(--background-secondary);
     padding: 1.5rem;
     border-radius: var(--radius-lg);
-    margin-bottom: 2rem;
-    box-shadow: var(--shadow-md);
+}
+
+.detail-item h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.detail-item p {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.edit-priority-select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+}
+
+.priority-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.priority-badge.low {
+    background-color: rgba(34, 197, 94, 0.1);
+    color: var(--success-color);
+}
+
+.priority-badge.medium {
+    background-color: rgba(234, 179, 8, 0.1);
+    color: var(--warning-color);
+}
+
+.priority-badge.high {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--error-color);
 }
 
 .goal-updates {
@@ -440,33 +577,17 @@ p {
 }
 
 .update-form {
-    background: var(--background-white);
-    padding: 1.5rem;
-    border-radius: var(--radius-lg);
     margin-bottom: 1.5rem;
-    box-shadow: var(--shadow-md);
 }
 
 .update-form textarea {
     width: 100%;
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    font-family: inherit;
-    font-size: 1rem;
     min-height: 100px;
-    resize: vertical;
-}
-
-.update-form input {
-    width: 100%;
     padding: 0.75rem;
-    margin-bottom: 1rem;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    font-family: inherit;
-    font-size: 1rem;
+    margin-bottom: 1rem;
+    resize: vertical;
 }
 
 .updates-list {
@@ -476,19 +597,18 @@ p {
 }
 
 .update-card {
-    background: var(--background-white);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    padding: 1.25rem;
-    box-shadow: var(--shadow-sm);
+    background-color: var(--background-secondary);
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--primary-color);
 }
 
 .update-meta {
     display: flex;
     justify-content: space-between;
-    margin-top: 0.75rem;
-    font-size: 0.875rem;
-    color: var(--text-light);
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
 }
 
 /* Buttons */
@@ -877,4 +997,147 @@ button[type="button"]:hover {
     to {
         stroke-dashoffset: 0;
     }
+}
+
+/* Settings Page */
+.settings-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+.settings-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.settings-header h1 {
+    margin: 0;
+}
+
+.settings-section {
+    background: var(--background-white);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-md);
+}
+
+.settings-section h2 {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.settings-form button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: 500;
+}
+
+.settings-form button:hover:not(:disabled) {
+    background-color: var(--primary-dark);
+}
+
+.settings-form button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.message {
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.message.success {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.message.error {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.duration-info,
+.end-date-info {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    padding: 0.5rem;
+    background-color: rgba(79, 70, 229, 0.05);
+    border-radius: var(--radius-sm);
+}
+
+.duration-type-selector {
+    margin-bottom: 1rem;
+}
+
+.duration-type-selector label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.radio-group {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.radio-group input[type="radio"] {
+    margin: 0;
 }

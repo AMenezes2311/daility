@@ -11,8 +11,7 @@ function GoalDetail() {
     const [updates, setUpdates] = useState([]);
     const [streak, setStreak] = useState(null);
     const [newUpdate, setNewUpdate] = useState({
-        content: '',
-        progress_percentage: 0
+        content: ''
     });
     const [deleteDialog, setDeleteDialog] = useState({
         isOpen: false
@@ -23,6 +22,8 @@ function GoalDetail() {
     const [startProgressDialog, setStartProgressDialog] = useState({
         isOpen: false
     });
+    const [editMode, setEditMode] = useState(false);
+    const [editedGoal, setEditedGoal] = useState(null);
 
     useEffect(() => {
         fetchGoal();
@@ -43,6 +44,7 @@ function GoalDetail() {
         }
 
         setGoal(data);
+        setEditedGoal(data);
     };
 
     const fetchUpdates = async () => {
@@ -98,8 +100,7 @@ function GoalDetail() {
 
         setUpdates([data[0], ...updates]);
         setNewUpdate({
-            content: '',
-            progress_percentage: 0
+            content: ''
         });
 
         // Update streak
@@ -243,6 +244,35 @@ function GoalDetail() {
         setStartProgressDialog({ isOpen: false });
     };
 
+    const handleEditClick = () => {
+        setEditMode(true);
+    };
+
+    const handleSaveEdit = async () => {
+        const { error } = await supabase
+            .from('goals')
+            .update({
+                title: editedGoal.title,
+                description: editedGoal.description,
+                priority: editedGoal.priority,
+                section_id: editedGoal.section_id
+            })
+            .eq('id', id);
+
+        if (error) {
+            console.error('Error updating goal:', error);
+            return;
+        }
+
+        setGoal(editedGoal);
+        setEditMode(false);
+    };
+
+    const handleCancelEdit = () => {
+        setEditedGoal(goal);
+        setEditMode(false);
+    };
+
     const formatStatus = (status) => {
         switch (status) {
             case 'not_started':
@@ -288,32 +318,58 @@ function GoalDetail() {
 
             <div className="goal-header">
                 <div className="goal-header-content">
+                    <button onClick={handleBackClick} className="back-button">
+                        ← Back to Goals
+                    </button>
                     <div className="goal-title-section">
-                        <button onClick={handleBackClick} className="back-button">
-                            ← Back to Goals
-                        </button>
-                        <h2>{goal.title}</h2>
-                    </div>
-                    <div className="goal-actions">
-                        {goal.status === 'not_started' && (
-                            <button onClick={handleStartProgressClick} className="progress-button">
-                                Start Progress
+                        <div>
+                            {editMode ? (
+                                <input
+                                    type="text"
+                                    value={editedGoal.title}
+                                    onChange={(e) => setEditedGoal({ ...editedGoal, title: e.target.value })}
+                                    className="edit-title-input"
+                                />
+                            ) : (
+                                <h2>{goal.title}</h2>
+                            )}
+                        </div>
+                        <div className="goal-actions">
+                            {!editMode && goal.status === 'not_started' && (
+                                <button onClick={handleStartProgressClick} className="progress-button">
+                                    Start Progress
+                                </button>
+                            )}
+                            {!editMode && goal.status === 'in_progress' && (
+                                <button onClick={handleDoneClick} className="done-button">
+                                    Mark as Done
+                                </button>
+                            )}
+                            {!editMode && (
+                                <button onClick={handleEditClick} className="edit-button">
+                                    Edit Goal
+                                </button>
+                            )}
+                            {editMode && (
+                                <>
+                                    <button onClick={handleSaveEdit} className="save-button">
+                                        Save Changes
+                                    </button>
+                                    <button onClick={handleCancelEdit} className="cancel-button">
+                                        Cancel
+                                    </button>
+                                </>
+                            )}
+                            <button onClick={handleDeleteClick} className="delete-button">
+                                Delete Goal
                             </button>
-                        )}
-                        {goal.status === 'in_progress' && (
-                            <button onClick={handleDoneClick} className="done-button">
-                                Mark as Done
-                            </button>
-                        )}
-                        <button onClick={handleDeleteClick} className="delete-button">
-                            Delete Goal
-                        </button>
+                        </div>
                     </div>
                 </div>
                 <div className="goal-meta">
                     <span className={`status-badge ${goal.status}`}>Status: {formatStatus(goal.status)}</span>
-                    <span>Priority: {goal.priority}</span>
-                    <span>Duration: {goal.expected_duration} days</span>
+                    <span className={`priority-badge ${goal.priority}`}>Priority: {goal.priority.charAt(0).toUpperCase() + goal.priority.slice(1)}</span>
+                    <span className="duration-badge">Duration: {goal.expected_duration} days</span>
                 </div>
                 {streak && (
                     <div className="streak-info">
@@ -326,7 +382,42 @@ function GoalDetail() {
 
             <div className="goal-description">
                 <h3>Description</h3>
-                <p>{goal.description}</p>
+                {editMode ? (
+                    <textarea
+                        value={editedGoal.description}
+                        onChange={(e) => setEditedGoal({ ...editedGoal, description: e.target.value })}
+                        className="edit-description-input"
+                    />
+                ) : (
+                    <p>{goal.description}</p>
+                )}
+            </div>
+
+            <div className="goal-details">
+                <div className="detail-item">
+                    <h4>Start Date</h4>
+                    <p>{new Date(goal.start_date).toLocaleDateString()}</p>
+                </div>
+                <div className="detail-item">
+                    <h4>Target Date</h4>
+                    <p>{new Date(goal.target_date).toLocaleDateString()}</p>
+                </div>
+                <div className="detail-item">
+                    <h4>Priority</h4>
+                    {editMode ? (
+                        <select
+                            value={editedGoal.priority}
+                            onChange={(e) => setEditedGoal({ ...editedGoal, priority: e.target.value })}
+                            className="edit-priority-select"
+                        >
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    ) : (
+                        <p className={`priority-badge ${goal.priority}`}>{goal.priority}</p>
+                    )}
+                </div>
             </div>
 
             <div className="goal-updates">
@@ -338,15 +429,6 @@ function GoalDetail() {
                         onChange={(e) => setNewUpdate({ ...newUpdate, content: e.target.value })}
                         required
                     />
-                    <input
-                        type="number"
-                        min="0"
-                        max="100"
-                        placeholder="Progress Percentage"
-                        value={newUpdate.progress_percentage}
-                        onChange={(e) => setNewUpdate({ ...newUpdate, progress_percentage: parseInt(e.target.value) })}
-                        required
-                    />
                     <button type="submit">Add Update</button>
                 </form>
 
@@ -355,7 +437,6 @@ function GoalDetail() {
                         <div key={update.id} className="update-card">
                             <p>{update.content}</p>
                             <div className="update-meta">
-                                <span>Progress: {update.progress_percentage}%</span>
                                 <span>Date: {new Date(update.created_at).toLocaleDateString()}</span>
                             </div>
                         </div>

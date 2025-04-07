@@ -11,9 +11,10 @@ function Goals() {
     const [newGoal, setNewGoal] = useState({
         title: '',
         description: '',
-        expected_duration: '',
         start_date: new Date().toISOString().split('T')[0],
         target_date: '',
+        expected_duration: '',
+        duration_type: 'days', // 'days' or 'end_date'
         priority: 'medium',
         section_id: null
     });
@@ -120,10 +121,30 @@ function Goals() {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        // Convert empty string to null for expected_duration
+        // Calculate target date if duration is provided
+        let targetDate = newGoal.target_date;
+        let expectedDuration = null;
+
+        if (newGoal.duration_type === 'days' && newGoal.expected_duration) {
+            const startDate = new Date(newGoal.start_date);
+            const endDate = new Date(startDate);
+            endDate.setDate(endDate.getDate() + parseInt(newGoal.expected_duration));
+            targetDate = endDate.toISOString().split('T')[0];
+            expectedDuration = parseInt(newGoal.expected_duration);
+        } else if (newGoal.duration_type === 'end_date' && newGoal.target_date) {
+            const startDate = new Date(newGoal.start_date);
+            const endDate = new Date(newGoal.target_date);
+            const diffTime = Math.abs(endDate - startDate);
+            expectedDuration = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        // Create a new object without the duration_type field
+        const { duration_type, ...goalDataWithoutType } = newGoal;
+
         const goalData = {
-            ...newGoal,
-            expected_duration: newGoal.expected_duration === '' ? null : parseInt(newGoal.expected_duration),
+            ...goalDataWithoutType,
+            target_date: targetDate,
+            expected_duration: expectedDuration,
             user_id: user.id,
             status: 'not_started'
         };
@@ -143,9 +164,10 @@ function Goals() {
         setNewGoal({
             title: '',
             description: '',
-            expected_duration: '',
             start_date: new Date().toISOString().split('T')[0],
             target_date: '',
+            expected_duration: '',
+            duration_type: 'days',
             priority: 'medium',
             section_id: null
         });
@@ -354,33 +376,97 @@ function Goals() {
                         required
                     />
                     <input
-                        type="number"
-                        placeholder="Expected Duration (days)"
-                        value={newGoal.expected_duration}
-                        onChange={(e) => setNewGoal({ ...newGoal, expected_duration: parseInt(e.target.value) })}
-                        required
-                    />
-                    <input
                         type="date"
                         value={newGoal.start_date}
                         onChange={(e) => setNewGoal({ ...newGoal, start_date: e.target.value })}
                         required
                     />
-                    <input
-                        type="date"
-                        placeholder="Target Date"
-                        value={newGoal.target_date}
-                        onChange={(e) => setNewGoal({ ...newGoal, target_date: e.target.value })}
-                        required
-                    />
-                    <select
-                        value={newGoal.priority}
-                        onChange={(e) => setNewGoal({ ...newGoal, priority: e.target.value })}
-                    >
-                        <option value="low">Low Priority</option>
-                        <option value="medium">Medium Priority</option>
-                        <option value="high">High Priority</option>
-                    </select>
+
+                    <div className="duration-type-selector">
+                        <label>Set goal by:</label>
+                        <div className="radio-group">
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="duration_type"
+                                    value="days"
+                                    checked={newGoal.duration_type === 'days'}
+                                    onChange={(e) => setNewGoal({
+                                        ...newGoal,
+                                        duration_type: e.target.value,
+                                        target_date: '' // Clear target date when switching to days
+                                    })}
+                                />
+                                Duration in days
+                            </label>
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="duration_type"
+                                    value="end_date"
+                                    checked={newGoal.duration_type === 'end_date'}
+                                    onChange={(e) => setNewGoal({
+                                        ...newGoal,
+                                        duration_type: e.target.value,
+                                        expected_duration: '' // Clear duration when switching to end date
+                                    })}
+                                />
+                                End date
+                            </label>
+                        </div>
+                    </div>
+
+                    {newGoal.duration_type === 'days' ? (
+                        <div className="form-group">
+                            <label htmlFor="expected_duration">Expected Duration (days)</label>
+                            <input
+                                id="expected_duration"
+                                type="number"
+                                placeholder="Expected Duration (days)"
+                                value={newGoal.expected_duration}
+                                onChange={(e) => setNewGoal({ ...newGoal, expected_duration: e.target.value })}
+                                min="1"
+                                required
+                            />
+                            {newGoal.expected_duration && (
+                                <div className="end-date-info">
+                                    End date: {new Date(new Date(newGoal.start_date).getTime() + parseInt(newGoal.expected_duration) * 24 * 60 * 60 * 1000).toLocaleDateString()}
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="form-group">
+                            <label htmlFor="target_date">Target Date</label>
+                            <input
+                                id="target_date"
+                                type="date"
+                                placeholder="Target Date"
+                                value={newGoal.target_date}
+                                onChange={(e) => setNewGoal({ ...newGoal, target_date: e.target.value })}
+                                min={newGoal.start_date}
+                                required
+                            />
+                            {newGoal.target_date && (
+                                <div className="duration-info">
+                                    Duration: {Math.ceil(Math.abs(new Date(newGoal.target_date) - new Date(newGoal.start_date)) / (1000 * 60 * 60 * 24))} days
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    <div className="form-group">
+                        <label htmlFor="priority">Priority</label>
+                        <select
+                            id="priority"
+                            value={newGoal.priority}
+                            onChange={(e) => setNewGoal({ ...newGoal, priority: e.target.value })}
+                        >
+                            <option value="low">Low Priority</option>
+                            <option value="medium">Medium Priority</option>
+                            <option value="high">High Priority</option>
+                        </select>
+                    </div>
+
                     <select
                         value={newGoal.section_id || ''}
                         onChange={(e) => setNewGoal({ ...newGoal, section_id: e.target.value || null })}
@@ -456,8 +542,8 @@ function Goals() {
                                         <p>{goal.description}</p>
                                         <div className="goal-meta">
                                             <span className={`status-badge ${goal.status}`}>Status: {formatStatus(goal.status)}</span>
-                                            <span>Priority: {goal.priority}</span>
-                                            <span>Duration: {goal.expected_duration} days</span>
+                                            <span className={`priority-badge ${goal.priority}`}>Priority: {goal.priority.charAt(0).toUpperCase() + goal.priority.slice(1)}</span>
+                                            <span className="duration-badge">Duration: {goal.expected_duration} days</span>
                                         </div>
                                     </Link>
                                 ))}
@@ -497,8 +583,8 @@ function Goals() {
                             <p>{goal.description}</p>
                             <div className="goal-meta">
                                 <span className={`status-badge ${goal.status}`}>Status: {formatStatus(goal.status)}</span>
-                                <span>Priority: {goal.priority}</span>
-                                <span>Duration: {goal.expected_duration} days</span>
+                                <span className={`priority-badge ${goal.priority}`}>Priority: {goal.priority.charAt(0).toUpperCase() + goal.priority.slice(1)}</span>
+                                <span className="duration-badge">Duration: {goal.expected_duration} days</span>
                             </div>
                         </Link>
                     ))}

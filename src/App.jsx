@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Goals from './pages/Goals';
 import GoalDetail from './pages/GoalDetail';
+import Settings from './pages/Settings';
 import Navigation from './components/Navigation';
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
         <Route path="/register" element={!session ? <Register /> : <Navigate to="/goals" />} />
         <Route path="/goals" element={session ? <Goals /> : <Navigate to="/" />} />
         <Route path="/goals/:id" element={session ? <GoalDetail /> : <Navigate to="/" />} />
+        <Route path="/settings" element={session ? <Settings /> : <Navigate to="/" />} />
       </Routes>
     </Router>
   );
