@@ -28,7 +28,8 @@ function Register() {
                     data: {
                         first_name: formData.firstName,
                         last_name: formData.lastName
-                    }
+                    },
+                    emailRedirectTo: 'https://amenezes2311.github.io/daility/login'
                 }
             });
 
