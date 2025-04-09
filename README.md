@@ -18,7 +18,7 @@
 
 ## Live Site
 
-Coming soon...
+[Daility Webpage](https://amenezes2311.github.io/daility/)
 
 ## License
 
@@ -30,4 +30,4 @@ You are **not permitted** to copy, distribute, modify, or reuse any part of the 
 
 ## Contact
 
-For any questions or feedback, feel free to reach out at: [andremenezes231@hotmail.com]
+For any questions or feedback, feel free to reach out at: [André Menezes](mailto:andremenezes231@hotmail.com)
