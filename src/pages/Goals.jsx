@@ -335,27 +335,34 @@ function Goals() {
             <div className="goals-header">
                 <div className="goals-header-left">
                     {userProfile && (
-                        <h2 className="user-greeting">Hi, {userProfile.first_name} {userProfile.last_name}</h2>
+                        <h1 className="user-greeting">{userProfile.first_name}'s Goals</h1>
                     )}
-                    <h1>My Goals</h1>
                     <div className="goals-actions">
                         <button onClick={() => setShowSectionForm(true)}>Add Section</button>
                         <button onClick={() => setShowGoalForm(true)}>Add Goal</button>
                     </div>
                 </div>
-                <div className="user-menu-container">
+                <div className="goals-header-right">
                     <button
-                        className="user-menu-button"
-                        onClick={() => setShowUserMenu(!showUserMenu)}
+                        className="back-to-dashboard"
+                        onClick={() => navigate('/dashboard')}
                     >
-                        {userProfile ? `${userProfile.first_name} ${userProfile.last_name}` : 'User'}
+                        Back to Dashboard
                     </button>
-                    {showUserMenu && (
-                        <div className="user-menu">
-                            <button onClick={() => navigate('/settings')}>Settings</button>
-                            <button onClick={handleSignOut}>Sign Out</button>
-                        </div>
-                    )}
+                    <div className="user-menu-container">
+                        <button
+                            className="user-menu-button"
+                            onClick={() => setShowUserMenu(!showUserMenu)}
+                        >
+                            {userProfile ? `${userProfile.first_name} ${userProfile.last_name}` : 'User'}
+                        </button>
+                        {showUserMenu && (
+                            <div className="user-menu">
+                                <button onClick={() => navigate('/settings')}>Settings</button>
+                                <button onClick={handleSignOut}>Sign Out</button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 

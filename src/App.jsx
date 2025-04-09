@@ -4,6 +4,7 @@ import supabase from './helper/supabaseClient';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
 import Goals from './pages/Goals';
 import GoalDetail from './pages/GoalDetail';
 import Settings from './pages/Settings';
@@ -37,8 +38,9 @@ function App() {
       <Navigation />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={!session ? <Login /> : <Navigate to="/goals" />} />
-        <Route path="/register" element={!session ? <Register /> : <Navigate to="/goals" />} />
+        <Route path="/login" element={!session ? <Login /> : <Navigate to="/dashboard" />} />
+        <Route path="/register" element={!session ? <Register /> : <Navigate to="/dashboard" />} />
+        <Route path="/dashboard" element={session ? <Dashboard /> : <Navigate to="/" />} />
         <Route path="/goals" element={session ? <Goals /> : <Navigate to="/" />} />
         <Route path="/goals/:id" element={session ? <GoalDetail /> : <Navigate to="/" />} />
         <Route path="/settings" element={session ? <Settings /> : <Navigate to="/" />} />
